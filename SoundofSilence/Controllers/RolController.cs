@@ -9,13 +9,13 @@ namespace SoundofSilence.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     [Route("[controller]/[action]")]
-    public class RolCcontroller : ControllerBase
+    public class RolController : ControllerBase
     {
 
         private readonly IRolService _rolService;
         private readonly ServiceContext _serviceContext;
 
-        public RolCcontroller(IRolService rolService, ServiceContext serviceContext)
+        public RolController(IRolService rolService, ServiceContext serviceContext)
         {
             _rolService = rolService;
             _serviceContext = serviceContext;
@@ -40,8 +40,6 @@ namespace SoundofSilence.Controllers
                 throw new InvalidCredentialException("El usuario no está autorizado o no existe");
             }
         }
-
-
 
     }
 }

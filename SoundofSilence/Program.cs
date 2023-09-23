@@ -13,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
 
 builder.Services.AddDbContext<ServiceContext>(
     options => 
