@@ -23,7 +23,7 @@ namespace SoundofSilence.Controllers
 
 
         [HttpPost(Name = "InsertUsers")]
-        public int Post([FromQuery] string userName, [FromQuery] string userPassword, [FromBody] Users users)
+        public IActionResult Post([FromQuery] string userName, [FromQuery] string userPassword, [FromBody] Users users)
         {
             var selectedUser = _serviceContext.Set<Users>()
                                    .Where(u => u.Name_user == userName
@@ -34,25 +34,22 @@ namespace SoundofSilence.Controllers
             if (selectedUser != null)
             {
 
-                // Verificar si ya existe un usuario con el mismo correo electrónico
                 var existingUserWithSameEmail = _serviceContext.Set<Users>()
                     .FirstOrDefault(u => u.Email == users.Email);
 
                 if (existingUserWithSameEmail != null)
                 {
-                    throw new InvalidCredentialException("Ya existe un usuario con el mismo correo electrónico.");
+                    return StatusCode(404, "Ya existe un usuario con el mismo correo electrónico.");
                 }
                 else
                 {
-                    // Si no existe un usuario con el mismo nombre de usuario ni correo electrónico,
-                    // entonces puedes agregar el nuevo usuario.
-                    return _usersService.InsertUsers(users);
+                    return Ok(_usersService.InsertUsers(users));
                 }
 
             }
             else
             {
-                throw new InvalidCredentialException("El usuario no está autorizado o no existe");
+                return StatusCode(404, "El usuario no está autorizado o no existe");
             }
         }
     }
