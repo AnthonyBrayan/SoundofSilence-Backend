@@ -21,18 +21,16 @@ namespace SoundofSilence.Controllers
             _serviceContext = serviceContext;
         }
 
-
         [HttpPost(Name = "InsertUsers")]
-        public IActionResult Post([FromQuery] string userName, [FromQuery] string userPassword, [FromBody] Users users)
+        public IActionResult Post([FromBody] Users users)
         {
-            var selectedUser = _serviceContext.Set<Users>()
-                                   .Where(u => u.Name_user == userName
-                                       && u.Password == userPassword
-                                       && u.Id_rol == 1)
-                                    .FirstOrDefault();
 
-            if (selectedUser != null)
+            try
             {
+                var roleName = "Subscribe"; 
+                var roleId = _usersService.GetRoleIdByName(roleName);
+
+                users.Id_rol = roleId;
 
                 var existingUserWithSameEmail = _serviceContext.Set<Users>()
                     .FirstOrDefault(u => u.Email == users.Email);
@@ -45,12 +43,12 @@ namespace SoundofSilence.Controllers
                 {
                     return Ok(_usersService.InsertUsers(users));
                 }
-
             }
-            else
+            catch (Exception ex)
             {
-                return StatusCode(404, "El usuario no está autorizado o no existe");
+                return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
             }
         }
+
     }
 }

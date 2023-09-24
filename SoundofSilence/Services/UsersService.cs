@@ -16,5 +16,20 @@ namespace SoundofSilence.Services
             _serviceContext.SaveChanges();
             return users.Id_user;
         }
+
+        public int GetRoleIdByName(string roleName)
+        {
+            var role = _serviceContext.Rol.FirstOrDefault(r => r.Name_rol == roleName);
+
+            if (role != null)
+            {
+                return role.Id_rol;
+            }
+            else
+            {
+                throw new Exception($"No se encontró un rol con el nombre {roleName}");
+            }
+        }
+
     }
 }
