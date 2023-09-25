@@ -1,5 +1,6 @@
 using Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SoundofSilence.IServices;
 using SoundofSilence.Services;
 
@@ -12,6 +13,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
@@ -19,8 +31,9 @@ builder.Services.AddDbContext<ServiceContext>(
     options => 
     options.UseSqlServer("name=ConnectionStrings:ServiceContext"));
 
-var app = builder.Build();
 
+var app = builder.Build();
+app.UseCors("AllowAll");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

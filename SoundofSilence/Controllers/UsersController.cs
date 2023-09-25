@@ -9,6 +9,8 @@ using System.Web.Http.Cors;
 namespace SoundofSilence.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    //[EnableCors("AllowAll")]
+
     [Route("[controller]/[action]")]
     public class UsersController : ControllerBase
     {
