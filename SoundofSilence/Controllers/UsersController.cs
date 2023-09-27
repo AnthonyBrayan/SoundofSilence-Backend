@@ -29,7 +29,7 @@ namespace SoundofSilence.Controllers
 
             try
             {
-                var roleName = "Subscribe"; 
+                var roleName = "Subscribe";
                 var roleId = _usersService.GetRoleIdByName(roleName);
 
                 users.Id_rol = roleId;
@@ -54,3 +54,7 @@ namespace SoundofSilence.Controllers
 
     }
 }
+
+
+
+
