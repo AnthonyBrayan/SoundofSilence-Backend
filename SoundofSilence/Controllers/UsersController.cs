@@ -1,10 +1,14 @@
 ﻿using Data;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SoundofSilence.IServices;
 using SoundofSilence.Models;
 using SoundofSilence.Services;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
+using System.Security.Claims;
+using System.Text;
 using System.Web.Http.Cors;
 
 namespace SoundofSilence.Controllers
@@ -15,11 +19,13 @@ namespace SoundofSilence.Controllers
     [Route("[controller]/[action]")]
     public class UsersController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
         private readonly IUsersService _usersService;
         private readonly ServiceContext _serviceContext;
 
-        public UsersController(IUsersService usersService, ServiceContext serviceContext)
+        public UsersController(IConfiguration configuration, IUsersService usersService, ServiceContext serviceContext)
         {
+            _configuration = configuration;
             _usersService = usersService;
             _serviceContext = serviceContext;
         }
@@ -64,7 +70,9 @@ namespace SoundofSilence.Controllers
 
                 if (user != null && BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password))
                 {
-                    return StatusCode(200, "Inicio de sesión exitoso");
+                    var token = GenerateJwtToken(user);
+                    return Ok(new { Token = token });
+                    //return StatusCode(200, "Inicio de sesión exitoso");
                 }
                 else
                 {
@@ -76,13 +84,26 @@ namespace SoundofSilence.Controllers
                 return StatusCode(500, $"Error al iniciar sesión: {ex.Message}");
             }
         }
-
-
-        //private string GenerateAuthToken(int userId)
-        //{
-        //    // Implementa la lógica para generar un token de autenticación, por ejemplo, utilizando JWT.
-        //    // Retorna el token generado.
-        //}
+        private string GenerateJwtToken(Users user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id_user.ToString()),
+                    // Otros claims si es necesario
+                }),
+                Expires = DateTime.UtcNow.AddHours(1), // Duración del token
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
 
     }
 }
