@@ -2,6 +2,7 @@
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using SoundofSilence.IServices;
+using SoundofSilence.Services;
 using System.Security.Authentication;
 using System.Web.Http.Cors;
 
@@ -23,7 +24,7 @@ namespace SoundofSilence.Controllers
         }
 
         [HttpPost(Name = "InsertRol")]
-        public int Post([FromQuery] string userName, [FromQuery] string userPassword, [FromBody] Rol rol)
+        public IActionResult Post([FromQuery] string userName, [FromQuery] string userPassword, [FromBody] Rol rol)
         {
             var selectedUser = _serviceContext.Set<Users>()
                                    .Where(u => u.Name_user == userName
@@ -33,11 +34,21 @@ namespace SoundofSilence.Controllers
 
             if (selectedUser != null)
             {
-                return _rolService.InsertRol(rol);
+                var existingWithNameRol = _serviceContext.Set<Rol>()
+                    .FirstOrDefault(u => u.Name_rol == rol.Name_rol);
+
+                if (existingWithNameRol != null)
+                {
+                    return StatusCode(404, "Ya existe un rol con el mismo nombre.");
+                }
+                else
+                {
+                    return Ok(_rolService.InsertRol(rol));
+                }
             }
             else
             {
-                throw new InvalidCredentialException("El usuario no está autorizado o no existe");
+                return StatusCode(404, "El usuario no está autorizado o no existe");
             }
         }
 

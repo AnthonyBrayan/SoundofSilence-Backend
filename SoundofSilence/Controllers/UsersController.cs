@@ -9,6 +9,8 @@ using System.Web.Http.Cors;
 namespace SoundofSilence.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    //[EnableCors("AllowAll")]
+
     [Route("[controller]/[action]")]
     public class UsersController : ControllerBase
     {
@@ -21,39 +23,37 @@ namespace SoundofSilence.Controllers
             _serviceContext = serviceContext;
         }
 
-
         [HttpPost(Name = "InsertUsers")]
-        public int Post([FromQuery] string userName, [FromQuery] string userPassword, [FromBody] Users users)
+        public IActionResult Post([FromBody] Users users)
         {
-            var selectedUser = _serviceContext.Set<Users>()
-                                   .Where(u => u.Name_user == userName
-                                       && u.Password == userPassword
-                                       && u.Id_rol == 1)
-                                    .FirstOrDefault();
 
-            if (selectedUser != null)
+            try
             {
+                var roleName = "Subscribe";
+                var roleId = _usersService.GetRoleIdByName(roleName);
 
-                // Verificar si ya existe un usuario con el mismo correo electrónico
+                users.Id_rol = roleId;
+
                 var existingUserWithSameEmail = _serviceContext.Set<Users>()
                     .FirstOrDefault(u => u.Email == users.Email);
 
                 if (existingUserWithSameEmail != null)
                 {
-                    throw new InvalidCredentialException("Ya existe un usuario con el mismo correo electrónico.");
+                    return StatusCode (400,"Ya existe un usuario con el mismo correo electrónico.");
                 }
                 else
                 {
-                    // Si no existe un usuario con el mismo nombre de usuario ni correo electrónico,
-                    // entonces puedes agregar el nuevo usuario.
-                    return _usersService.InsertUsers(users);
+                    return Ok(_usersService.InsertUsers(users));
                 }
-
             }
-            else
+            catch (Exception ex)
             {
-                throw new InvalidCredentialException("El usuario no está autorizado o no existe");
+                return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
             }
         }
+
     }
 }
+
+
+
