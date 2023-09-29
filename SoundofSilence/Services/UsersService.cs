@@ -31,5 +31,21 @@ namespace SoundofSilence.Services
             }
         }
 
+
+        public bool DeleteUser(int userId)
+        {
+            var user = _serviceContext.Users.FirstOrDefault(u => u.Id_user == userId);
+
+            if (user == null)
+            {
+                return false; // Usuario no encontrado, la eliminación no se realizó.
+            }
+
+            _serviceContext.Users.Remove(user);
+            _serviceContext.SaveChanges();
+
+            return true; // La eliminación se realizó con éxito.
+        }
+
     }
 }

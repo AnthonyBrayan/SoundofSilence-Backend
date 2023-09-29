@@ -30,6 +30,38 @@ namespace SoundofSilence.Controllers
             _serviceContext = serviceContext;
         }
 
+        //[HttpPost(Name = "InsertUsers")]
+        //public IActionResult Post([FromBody] Users users)
+        //{
+        //    try
+        //    {
+        //        var roleName = "Subscribe";
+        //        var roleId = _usersService.GetRoleIdByName(roleName);
+
+        //        users.Id_rol = roleId;
+
+        //        var existingUserWithSameEmail = _serviceContext.Set<Users>()
+        //            .FirstOrDefault(u => u.Email == users.Email);
+
+        //        if (existingUserWithSameEmail != null)
+        //        {
+        //            return StatusCode(404, "Ya existe un usuario con el mismo correo electrónico.");
+        //        }
+        //        else
+        //        {
+        //            // Hash de la contraseña antes de almacenarla en la base de datos
+        //            users.Password = BCrypt.Net.BCrypt.HashPassword(users.Password);
+
+        //            return Ok(_usersService.InsertUsers(users));
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
+        //    }
+        //}
+
+
         [HttpPost(Name = "InsertUsers")]
         public IActionResult Post([FromBody] Users users)
         {
@@ -38,7 +70,12 @@ namespace SoundofSilence.Controllers
                 var roleName = "Subscribe";
                 var roleId = _usersService.GetRoleIdByName(roleName);
 
-                users.Id_rol = roleId;
+                // Verifica si se proporcionó manualmente un valor para Id_rol en Swagger
+                if (users.Id_rol == 0)
+                {
+                    // Si no se proporcionó un valor manualmente, establece el valor predeterminado (2)
+                    users.Id_rol = 2;
+                }
 
                 var existingUserWithSameEmail = _serviceContext.Set<Users>()
                     .FirstOrDefault(u => u.Email == users.Email);
@@ -61,6 +98,9 @@ namespace SoundofSilence.Controllers
             }
         }
 
+
+
+
         [HttpPost]
         public IActionResult Login([FromBody] LoginRequestModel loginRequest)
         {
@@ -71,8 +111,9 @@ namespace SoundofSilence.Controllers
                 if (user != null && BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password))
                 {
                     var token = GenerateJwtToken(user);
-                    return Ok(new { Token = token });
-                    //return StatusCode(200, "Inicio de sesión exitoso");
+
+                    // Retorna el token y el rol del usuario en la respuesta
+                    return Ok(new { Token = token, Role = user.Id_rol });
                 }
                 else
                 {
@@ -105,5 +146,36 @@ namespace SoundofSilence.Controllers
             return tokenHandler.WriteToken(token);
         }
 
+
+
+
+        [HttpDelete("{id}", Name = "DeleteUser")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                var user = _serviceContext.Users.FirstOrDefault(u => u.Id_user == id);
+
+                if (user == null)
+                {
+                    return StatusCode(404, "Usuario no encontrado");
+                }
+
+                _serviceContext.Users.Remove(user);
+                _serviceContext.SaveChanges();
+
+                return NoContent(); // Devuelve HTTP 204 (No Content) para indicar que la eliminación fue exitosa.
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al eliminar el usuario: {ex.Message}");
+            }
+        }
     }
+
+
 }
+
+
+
+

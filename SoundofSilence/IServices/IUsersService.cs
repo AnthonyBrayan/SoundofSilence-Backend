@@ -6,5 +6,6 @@ namespace SoundofSilence.IServices
     {
         int InsertUsers(Users users);
         int GetRoleIdByName(string roleName);
+        bool DeleteUser(int userId);
     }
 }
