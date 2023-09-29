@@ -92,10 +92,11 @@ namespace SoundofSilence.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id_user.ToString()),
-                    // Otros claims si es necesario
-                }),
-                Expires = DateTime.UtcNow.AddHours(1), // Duración del token
+            new Claim(ClaimTypes.Name, user.Id_user.ToString()),
+            new Claim(ClaimTypes.Role, user.Id_rol.ToString()), // Agregar el rol como claim
+            // Otros claims si es necesario
+        }),
+                Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature
@@ -104,6 +105,26 @@ namespace SoundofSilence.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+        //private string GenerateJwtToken(Users user)
+        //{
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"]);
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new[]
+        //        {
+        //            new Claim(ClaimTypes.Name, user.Id_user.ToString()),
+        //            // Otros claims si es necesario
+        //        }),
+        //        Expires = DateTime.UtcNow.AddHours(1), // Duración del token
+        //        SigningCredentials = new SigningCredentials(
+        //            new SymmetricSecurityKey(key),
+        //            SecurityAlgorithms.HmacSha256Signature
+        //        ),
+        //    };
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    return tokenHandler.WriteToken(token);
+        //}
 
     }
 }
