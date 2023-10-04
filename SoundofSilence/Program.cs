@@ -53,7 +53,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
-builder.Services.AddDbContext<ServiceContext>(
+builder.Services.AddDbContext<IServiceContext, ServiceContext>(
     options => 
     options.UseSqlServer("name=ConnectionStrings:ServiceContext"));
 

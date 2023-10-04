@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public class ServiceContext : DbContext
+    public class ServiceContext : DbContext, IServiceContext
     {
         public ServiceContext(DbContextOptions<ServiceContext> options) : base(options) { }
         public DbSet<Rol> Rol { get; set; }
@@ -30,6 +30,10 @@ namespace Data
 
         }
 
+        IQueryable<T> IServiceContext.Set<T>()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ServiceContextFactory : IDesignTimeDbContextFactory<ServiceContext>

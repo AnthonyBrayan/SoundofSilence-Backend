@@ -21,9 +21,9 @@ namespace SoundofSilence.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUsersService _usersService;
-        private readonly ServiceContext _serviceContext;
+        private readonly IServiceContext _serviceContext;
 
-        public UsersController(IConfiguration configuration, IUsersService usersService, ServiceContext serviceContext)
+        public UsersController(IConfiguration configuration, IUsersService usersService, IServiceContext serviceContext)
         {
             _configuration = configuration;
             _usersService = usersService;
