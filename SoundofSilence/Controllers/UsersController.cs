@@ -71,7 +71,8 @@ namespace SoundofSilence.Controllers
                 if (user != null && BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password))
                 {
                     var token = GenerateJwtToken(user);
-                    return Ok(new { Token = token });
+
+                    return Ok(new { Token = token, Role = user.Id_rol });
                     //return StatusCode(200, "Inicio de sesión exitoso");
                 }
                 else
@@ -84,6 +85,9 @@ namespace SoundofSilence.Controllers
                 return StatusCode(500, $"Error al iniciar sesión: {ex.Message}");
             }
         }
+
+
+
         private string GenerateJwtToken(Users user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

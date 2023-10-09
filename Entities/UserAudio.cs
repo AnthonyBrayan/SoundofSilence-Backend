@@ -27,6 +27,6 @@ namespace Entities
         public int Id_AudioFiles { get; set; }
 
         [JsonIgnore]
-        public virtual Users AudioFiles { get; set; }
+        public virtual AudioFiles AudioFiles { get; set; }
     }
 }

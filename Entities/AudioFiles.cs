@@ -24,5 +24,9 @@ namespace Entities
 
         [JsonIgnore]
         public virtual Category Category { get; set; }
+
+        [JsonIgnore]
+        public ICollection<UserAudio> UserAudio { get; set; }
+
     }
 }
