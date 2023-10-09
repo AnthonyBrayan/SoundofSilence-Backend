@@ -69,7 +69,6 @@ namespace SoundofSilence.Controllers
 
 
 
-
         [HttpPost]
         public IActionResult Login([FromBody] LoginRequestModel loginRequest)
         {
@@ -81,8 +80,9 @@ namespace SoundofSilence.Controllers
                 {
                     var token = GenerateJwtToken(user);
 
-                    // Retorna el token y el rol del usuario en la respuesta
                     return Ok(new { Token = token, Role = user.Id_rol });
+                    //return StatusCode(200, "Inicio de sesión exitoso");
+
                 }
                 else
                 {
@@ -94,6 +94,9 @@ namespace SoundofSilence.Controllers
                 return StatusCode(500, $"Error al iniciar sesión: {ex.Message}");
             }
         }
+
+
+
         private string GenerateJwtToken(Users user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
