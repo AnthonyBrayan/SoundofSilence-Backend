@@ -30,37 +30,6 @@ namespace SoundofSilence.Controllers
             _serviceContext = serviceContext;
         }
 
-        //[HttpPost(Name = "InsertUsers")]
-        //public IActionResult Post([FromBody] Users users)
-        //{
-        //    try
-        //    {
-        //        var roleName = "Subscribe";
-        //        var roleId = _usersService.GetRoleIdByName(roleName);
-
-        //        users.Id_rol = roleId;
-
-        //        var existingUserWithSameEmail = _serviceContext.Set<Users>()
-        //            .FirstOrDefault(u => u.Email == users.Email);
-
-        //        if (existingUserWithSameEmail != null)
-        //        {
-        //            return StatusCode(404, "Ya existe un usuario con el mismo correo electrónico.");
-        //        }
-        //        else
-        //        {
-        //            // Hash de la contraseña antes de almacenarla en la base de datos
-        //            users.Password = BCrypt.Net.BCrypt.HashPassword(users.Password);
-
-        //            return Ok(_usersService.InsertUsers(users));
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
-        //    }
-        //}
-
 
         [HttpPost(Name = "InsertUsers")]
         public IActionResult Post([FromBody] Users users)
