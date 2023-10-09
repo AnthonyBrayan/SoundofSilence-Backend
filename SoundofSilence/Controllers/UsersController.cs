@@ -38,7 +38,12 @@ namespace SoundofSilence.Controllers
                 var roleName = "Subscribe";
                 var roleId = _usersService.GetRoleIdByName(roleName);
 
-                users.Id_rol = roleId;
+                // Verifica si se proporcionó manualmente un valor para Id_rol en Swagger
+                if (users.Id_rol == 0)
+                {
+                    // Si no se proporcionó un valor manualmente, establece el valor predeterminado (2)
+                    users.Id_rol = 2;
+                }
 
                 var existingUserWithSameEmail = _serviceContext.Set<Users>()
                     .FirstOrDefault(u => u.Email == users.Email);
@@ -60,6 +65,7 @@ namespace SoundofSilence.Controllers
                 return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
             }
         }
+
 
         [HttpPost]
         public IActionResult Login([FromBody] LoginRequestModel loginRequest)
