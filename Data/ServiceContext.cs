@@ -16,6 +16,8 @@ namespace Data
         public DbSet<Rol> Rol { get; set; }
         public DbSet<Users> Users { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Rol>(entity =>
@@ -49,3 +51,5 @@ namespace Data
     }
 
 }
+
+

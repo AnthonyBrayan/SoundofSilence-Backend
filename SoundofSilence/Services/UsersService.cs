@@ -8,8 +8,10 @@ namespace SoundofSilence.Services
     {
         public UsersService(ServiceContext serviceContext) : base(serviceContext)
         {
+
         }
 
+       
         public int InsertUsers(Users users)
         {
             _serviceContext.Users.Add(users);
