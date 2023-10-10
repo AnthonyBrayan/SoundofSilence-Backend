@@ -12,8 +12,22 @@ namespace SoundofSilence.Services
 
         public int InsertAudioFiles(AudioFiles audioFiles)
         {
+            // Verifica si el Id_category proporcionado es válido
+            var category = _serviceContext.Category.FirstOrDefault(c => c.Id_category == audioFiles.Id_category);
+
+            if (category == null)
+            {
+                // Si el Id_category no es válido, podrías lanzar una excepción o manejar el caso según tus requerimientos.
+                throw new InvalidOperationException("La categoría no es válida.");
+            }
+
+            // Establece la categoría del audioFiles
+            //audioFiles.Id_category = category.Id_category;
+
+            // Agrega el audioFiles al contexto y guarda los cambios
             _serviceContext.AudioFiles.Add(audioFiles);
             _serviceContext.SaveChanges();
+
             return audioFiles.Id_AudioFiles;
         }
 
@@ -28,10 +42,10 @@ namespace SoundofSilence.Services
             }
 
             // Actualiza las propiedades del producto con la información del producto modificado
-            existingAudioFiles.Title = updatedAudioFiles.Title;
-            existingAudioFiles.Video = updatedAudioFiles.Video;
-            existingAudioFiles.Description = updatedAudioFiles.Description;
-            existingAudioFiles.Audio = updatedAudioFiles.Audio;
+            existingAudioFiles.title = updatedAudioFiles.title;
+            existingAudioFiles.videoSrc = updatedAudioFiles.videoSrc;
+            existingAudioFiles.description = updatedAudioFiles.description;
+            existingAudioFiles.audioSrc = updatedAudioFiles.audioSrc;
             existingAudioFiles.Id_category = updatedAudioFiles.Id_category;
 
             _serviceContext.SaveChanges();
