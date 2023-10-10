@@ -9,25 +9,23 @@ using System.Text.Json.Serialization;
 
 namespace Entities
 {
-    public class Users
+    public class AudioFiles
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id_user { get; set; }
-        public string Name_user { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-
+        public int Id_AudioFiles { get; set; }
+        public string Title { get; set; }
+        public string Video { get; set; }
+        public string Description { get; set; }
+        public string Audio { get; set; }   
         // Relación con Usuer (muchos a uno)
-        [ForeignKey("Rol")]
-        public int Id_rol { get; set; }
+        [ForeignKey("Category")]
+        public int Id_category { get; set; }
 
         [JsonIgnore]
-        public virtual Rol Rol { get; set; }
+        public virtual Category Category { get; set; }
 
         [JsonIgnore]
-        //Relación con Custumer(uno a muchos)
         public ICollection<UserAudio> UserAudio { get; set; }
 
     }
