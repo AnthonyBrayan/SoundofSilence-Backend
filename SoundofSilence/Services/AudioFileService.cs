@@ -64,5 +64,10 @@ namespace SoundofSilence.Services
                 throw new InvalidOperationException("El Audio File no existe.");
             }
         }
+
+        public List<AudioFiles> GetAudioFiles()
+        {
+            return _serviceContext.AudioFiles.ToList();
+        }
     }
 }

@@ -62,5 +62,12 @@ namespace SoundofSilence.Controllers
             return Ok(new { message = "AudioFile eliminado exitosamente" });
         }
 
+        [HttpGet(Name = "GetAudioFiles")]
+        public List<AudioFiles> Get()
+        {
+
+            return _audioFilesService.GetAudioFiles();
+        }
+
     }
 }
