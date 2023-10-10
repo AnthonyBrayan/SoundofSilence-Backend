@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ServiceContext))]
-    [Migration("20231009130143_initial")]
-    partial class initial
+    [Migration("20231009160310_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,7 +116,7 @@ namespace Data.Migrations
 
                     b.HasIndex("Id_user");
 
-                    b.ToTable("UserAudio");
+                    b.ToTable("UserAudio", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Users", b =>

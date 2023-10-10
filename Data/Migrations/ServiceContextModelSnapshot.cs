@@ -113,7 +113,7 @@ namespace Data.Migrations
 
                     b.HasIndex("Id_user");
 
-                    b.ToTable("UserAudio");
+                    b.ToTable("UserAudio", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Users", b =>
