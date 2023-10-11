@@ -69,5 +69,15 @@ namespace SoundofSilence.Controllers
             return _audioFilesService.GetAudioFiles();
         }
 
+
+
+
+
+        [HttpGet("{Id_category}", Name = "GetAudioFilesByCategory")]
+        public List<AudioFiles> GetByCategory([FromRoute] int Id_category)
+        {
+            return _audioFilesService.GetAudioFilesByCategory(Id_category);
+        }
+
     }
 }
