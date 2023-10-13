@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ServiceContext))]
-    [Migration("20231009160310_Initial")]
+    [Migration("20231012195151_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -32,28 +32,26 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_AudioFiles"));
 
-                    b.Property<string>("Audio")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Id_category")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("audioSrc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Video")
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("videoSrc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id_AudioFiles");
-
-                    b.HasIndex("Id_category");
 
                     b.ToTable("AudioFiles", (string)null);
                 });
@@ -149,21 +147,10 @@ namespace Data.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("Entities.AudioFiles", b =>
-                {
-                    b.HasOne("Entities.Category", "Category")
-                        .WithMany("AudioFiles")
-                        .HasForeignKey("Id_category")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("Entities.UserAudio", b =>
                 {
                     b.HasOne("Entities.AudioFiles", "AudioFiles")
-                        .WithMany("UserAudio")
+                        .WithMany()
                         .HasForeignKey("Id_AudioFiles")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -188,16 +175,6 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Rol");
-                });
-
-            modelBuilder.Entity("Entities.AudioFiles", b =>
-                {
-                    b.Navigation("UserAudio");
-                });
-
-            modelBuilder.Entity("Entities.Category", b =>
-                {
-                    b.Navigation("AudioFiles");
                 });
 
             modelBuilder.Entity("Entities.Rol", b =>
