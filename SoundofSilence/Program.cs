@@ -54,6 +54,7 @@ builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAudioFilesService, AudioFileService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IUserAudioService, UserAudioService>();
 
 builder.Services.AddDbContext<ServiceContext>(
     options => 

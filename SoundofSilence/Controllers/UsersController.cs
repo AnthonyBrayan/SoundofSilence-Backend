@@ -93,7 +93,7 @@ namespace SoundofSilence.Controllers
             {
                 return StatusCode(500, $"Error al iniciar sesión: {ex.Message}");
             }
-        }
+            }
 
 
 
