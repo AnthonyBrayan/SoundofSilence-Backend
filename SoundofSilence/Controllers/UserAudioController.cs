@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Net.Http;
 
 namespace SoundofSilence.Controllers
 {
@@ -38,12 +39,24 @@ namespace SoundofSilence.Controllers
 
         [HttpPost("MarkFavorite")]
         public IActionResult MarkFavorite([FromBody] MarkFavoriteModel model)
-        //public IActionResult MarkFavorite(int cardId, [FromBody] string token)
+
         {
             // Recupera el ID del usuario desde el token almacenado en las cookies
             //var userId = ExtractUserIdFromToken(HttpContext);
             Console.WriteLine("IdCArd recibido: " + model.cardId);
-            var userId = ExtractUserIdFromToken(HttpContext);
+            // Verifica la existencia del encabezado 'Authorization'
+            //var authorizationHeader = HttpContext.Request.Headers["Authorization"];
+            //if (string.IsNullOrEmpty(authorizationHeader))
+            //{
+            //    // El encabezado 'Authorization' no está presente en la solicitud
+            //    return Unauthorized("Token no presente en la solicitud.");
+            //}
+            ////var userId = ExtractUserIdFromToken(HttpContext);
+            //Console.WriteLine("Token recibido: " + authorizationHeader);
+
+            //var userId = DecodeUserIdFromToken(authorizationHeader);
+            var userId = ExtractUserIdFromAuthorizationHeader(HttpContext);
+
 
             if (userId == null)
             {
@@ -77,24 +90,34 @@ namespace SoundofSilence.Controllers
             }
         }
 
-        public class MarkFavoriteModel
+        private int? ExtractUserIdFromAuthorizationHeader(HttpContext httpContext)
         {
-            public int cardId { get; set; }
-        }
-        private int? ExtractUserIdFromToken(HttpContext httpContext)
-        {
-            var token = httpContext.Request.Cookies["jwtToken"];
+            var authorizationHeader = httpContext.Request.Headers["Authorization"].ToString();
 
-            // Agrega un registro para imprimir el contenido del token
-            Console.WriteLine("Token recibido: " + token);
-
-            if (token != null)
+            if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
             {
+                var token = authorizationHeader.Substring("Bearer ".Length).Trim();
                 var userId = DecodeUserIdFromToken(token);
                 return userId;
             }
+
             return null;
         }
+
+        //private int? ExtractUserIdFromToken(HttpContext httpContext)
+        //{
+        //    var token = httpContext.Request.Cookies["jwtToken"];
+
+        //    // Agrega un registro para imprimir el contenido del token
+        //    Console.WriteLine("Token recibido: " + token);
+
+        //    if (token != null)
+        //    {
+        //        var userId = DecodeUserIdFromToken(token);
+        //        return userId;
+        //    }
+        //    return null;
+        //}
 
         private int? DecodeUserIdFromToken(string token)
         {
@@ -130,7 +153,10 @@ namespace SoundofSilence.Controllers
             return null;
         }
 
-
+        public class MarkFavoriteModel
+        {
+            public int cardId { get; set; }
+        }
 
 
 
