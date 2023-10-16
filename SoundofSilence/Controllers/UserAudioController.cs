@@ -41,20 +41,9 @@ namespace SoundofSilence.Controllers
         public IActionResult MarkFavorite([FromBody] MarkFavoriteModel model)
 
         {
-            // Recupera el ID del usuario desde el token almacenado en las cookies
-            //var userId = ExtractUserIdFromToken(HttpContext);
-            Console.WriteLine("IdCArd recibido: " + model.cardId);
-            // Verifica la existencia del encabezado 'Authorization'
-            //var authorizationHeader = HttpContext.Request.Headers["Authorization"];
-            //if (string.IsNullOrEmpty(authorizationHeader))
-            //{
-            //    // El encabezado 'Authorization' no está presente en la solicitud
-            //    return Unauthorized("Token no presente en la solicitud.");
-            //}
-            ////var userId = ExtractUserIdFromToken(HttpContext);
-            //Console.WriteLine("Token recibido: " + authorizationHeader);
 
-            //var userId = DecodeUserIdFromToken(authorizationHeader);
+            //Console.WriteLine("IdCArd recibido: " + model.cardId);
+
             var userId = ExtractUserIdFromAuthorizationHeader(HttpContext);
 
 
@@ -63,6 +52,7 @@ namespace SoundofSilence.Controllers
                 // El usuario no está autenticado
                 return Unauthorized("El usuario no está autenticado.");
             }
+
             // Realiza una conversión segura a int
             int idUser = userId.Value;
             // //Verifica si el usuario ya ha marcado esta tarjeta como favorita

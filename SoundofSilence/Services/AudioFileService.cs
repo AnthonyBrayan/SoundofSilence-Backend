@@ -22,7 +22,7 @@ namespace SoundofSilence.Services
             }
 
             // Establece la categoría del audioFiles
-            //audioFiles.Id_category = category.Id_category;
+            audioFiles.Id_category = category.Id_category; // Establecer el ID de la categoría
 
             // Agrega el audioFiles al contexto y guarda los cambios
             _serviceContext.AudioFiles.Add(audioFiles);
@@ -73,6 +73,13 @@ namespace SoundofSilence.Services
         public bool Exists(int Id_AudioFiles)
         {
             return _serviceContext.AudioFiles.Any(a => a.Id_AudioFiles == Id_AudioFiles);
+
+    }
+        public List<AudioFiles> GetAudioFilesByCategory(int Id_category)
+        {
+            // Filtra los archivos de audio por Id_category
+            return _serviceContext.AudioFiles.Where(audioFile => audioFile.Id_category == Id_category).ToList();
+
+        }
         }
     }
-}

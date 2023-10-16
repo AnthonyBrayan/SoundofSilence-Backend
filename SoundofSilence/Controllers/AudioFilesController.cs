@@ -34,16 +34,16 @@ namespace SoundofSilence.Controllers
         [HttpPost(Name = "InsertAudioFiles")]
         public IActionResult Post([FromBody] AudioFiles audioFiles)
         {
-            //try
-            //{
-            //    return Ok(_audioFilesService.InsertAudioFiles(audioFiles));
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
-            //}
+            try
+            {
+                return Ok(_audioFilesService.InsertAudioFiles(audioFiles));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
+            }
 
-            return Ok(_audioFilesService.InsertAudioFiles(audioFiles));
+            //return Ok(_audioFilesService.InsertAudioFiles(audioFiles));
         }
 
         [HttpPatch("{Id_AudioFiles}", Name = "UpdateAudioFiles")]
@@ -67,6 +67,16 @@ namespace SoundofSilence.Controllers
         {
 
             return _audioFilesService.GetAudioFiles();
+        }
+
+
+
+
+
+        [HttpGet("{Id_category}", Name = "GetAudioFilesByCategory")]
+        public List<AudioFiles> GetByCategory([FromRoute] int Id_category)
+        {
+            return _audioFilesService.GetAudioFilesByCategory(Id_category);
         }
 
     }
