@@ -69,5 +69,10 @@ namespace SoundofSilence.Services
         {
             return _serviceContext.AudioFiles.ToList();
         }
+
+        public bool Exists(int Id_AudioFiles)
+        {
+            return _serviceContext.AudioFiles.Any(a => a.Id_AudioFiles == Id_AudioFiles);
+        }
     }
 }
