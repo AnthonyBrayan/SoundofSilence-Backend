@@ -36,45 +36,13 @@ namespace SoundofSilence.Controllers
 
         }
 
-        //[HttpPost(Name = "InsertUserAudioFile")]
-        //public IActionResult PostAudioFile( int Id_AudioFiles, [FromBody] UserAudio userAudio)
-        //{
-        //    try
-        //    {
-        //        // Verifica si el Id_AudioFiles existe en la base de datos
-        //        var audioFileExists = _audioFilesService.Exists(Id_AudioFiles);
-
-        //        if (!audioFileExists)
-        //        {
-        //            return NotFound($"No se encontró un archivo de audio con el ID: {Id_AudioFiles}");
-        //        }
-
-        //        // Aquí debes validar y mapear los datos del modelo al tipo de entidad que utiliza tu servicio.
-        //        var userAudioEntity = new UserAudio
-        //        {
-        //            State = userAudio.State,
-        //            Id_user = userAudio.Id_user,
-        //            Id_AudioFiles = userAudio.Id_AudioFiles,
-        //        };
-
-        //        // Utiliza tu servicio para insertar el registro en la base de datos.
-        //        var userAudioId = _userAudioService.InsertUserAudio(userAudioEntity);
-
-        //        return Ok($"Registro de UserAudio insertado con éxito. ID: {userAudioId}");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Error al insertar el registro de UserAudio: {ex.Message}");
-        //    }
-
-
-        //}
-
         [HttpPost("MarkFavorite")]
-        //public IActionResult MarkFavorite([FromBody] int cardId, [FromBody] string token)
-        public IActionResult MarkFavorite(int cardId, [FromBody] string token)
+        public IActionResult MarkFavorite([FromBody] MarkFavoriteModel model)
+        //public IActionResult MarkFavorite(int cardId, [FromBody] string token)
         {
             // Recupera el ID del usuario desde el token almacenado en las cookies
+            //var userId = ExtractUserIdFromToken(HttpContext);
+            Console.WriteLine("IdCArd recibido: " + model.cardId);
             var userId = ExtractUserIdFromToken(HttpContext);
 
             if (userId == null)
@@ -85,7 +53,7 @@ namespace SoundofSilence.Controllers
             // Realiza una conversión segura a int
             int idUser = userId.Value;
             // //Verifica si el usuario ya ha marcado esta tarjeta como favorita
-            var existingUserAudio = _userAudioService.GetUserAudioByUserIdAndCardId(idUser, cardId);
+            var existingUserAudio = _userAudioService.GetUserAudioByUserIdAndCardId(idUser, model.cardId);
             if (existingUserAudio != null)
             {
                 // La tarjeta ya está marcada como favorita, puedes manejar esto como desmarcarla
@@ -99,7 +67,7 @@ namespace SoundofSilence.Controllers
                 var userAudio = new UserAudio
                 {
                     Id_user = idUser,
-                    Id_AudioFiles = cardId,
+                    Id_AudioFiles = model.cardId,
                     State = "active" // Puedes usar otro estado si lo prefieres
                 };
 
@@ -109,6 +77,10 @@ namespace SoundofSilence.Controllers
             }
         }
 
+        public class MarkFavoriteModel
+        {
+            public int cardId { get; set; }
+        }
         private int? ExtractUserIdFromToken(HttpContext httpContext)
         {
             var token = httpContext.Request.Cookies["jwtToken"];
