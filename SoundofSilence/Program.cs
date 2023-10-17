@@ -44,6 +44,10 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IAudioFilesService, AudioFileService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
 builder.Services.AddDbContext<ServiceContext>(
     options =>
     options.UseSqlServer("name=ConnectionStrings:ServiceContext"));

@@ -26,8 +26,9 @@ namespace Entities
         [JsonIgnore]
         public virtual Rol Rol { get; set; }
 
-        // Relación con Custumer (uno a muchos)
-        //public ICollection<User> User { get; set; }
+        [JsonIgnore]
+        //Relación con Custumer(uno a muchos)
+        public ICollection<UserAudio> UserAudio { get; set; }
 
     }
 }
