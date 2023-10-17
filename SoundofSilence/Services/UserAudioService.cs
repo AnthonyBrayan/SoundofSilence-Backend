@@ -47,6 +47,25 @@ namespace SoundofSilence.Services
             }
         }
 
+        public List<UserAudio> GetUserAudio()
+        {
+            return _serviceContext.UserAudio.ToList();
+        }
+
+        public List<AudioFiles> GetFavoriteAudioFilesByUserId(int userId)
+        {
+            // Realiza una consulta que une las tablas UserAudio y AudioFiles
+            var query = from userAudio in _serviceContext.UserAudio
+                        where userAudio.Id_user == userId
+                        join audioFile in _serviceContext.AudioFiles on userAudio.Id_AudioFiles equals audioFile.Id_AudioFiles
+                        select audioFile;
+
+            // Ejecuta la consulta y devuelve los resultados como una lista
+            return query.ToList();
+        }
+
+
+
 
     }
 }

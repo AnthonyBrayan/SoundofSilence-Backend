@@ -16,6 +16,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 
+
+
 namespace SoundofSilence.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
@@ -24,16 +26,13 @@ namespace SoundofSilence.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserAudioService _userAudioService;
-        private readonly IAudioFilesService _audioFilesService;
-        
+        //private readonly ITokenHandler _tokenHandler;
 
-        private readonly ServiceContext _serviceContext;
-
-        public UserAudioController(IConfiguration configuration, IUserAudioService userAudioService, IAudioFilesService audioFilesService, ServiceContext serviceContext)
+        public UserAudioController(IConfiguration configuration, IUserAudioService userAudioService)
         {
             _configuration = configuration;
             _userAudioService = userAudioService;
-            _serviceContext = serviceContext;
+            //_tokenHandler = tokenHandler;
 
         }
 
@@ -42,9 +41,57 @@ namespace SoundofSilence.Controllers
 
         {
 
-            //Console.WriteLine("IdCArd recibido: " + model.cardId);
+            try
+            {
+                Console.WriteLine("IdCArd recibido: " + model.cardId);
 
+                var userId = ExtractUserIdFromAuthorizationHeader(HttpContext);
+
+
+                if (userId == null)
+                {
+                    // El usuario no está autenticado
+                    return Unauthorized("El usuario no está autenticado.");
+                }
+
+                // Realiza una conversión segura a int
+                int idUser = userId.Value;
+                // //Verifica si el usuario ya ha marcado esta tarjeta como favorita
+                var existingUserAudio = _userAudioService.GetUserAudioByUserIdAndCardId(idUser, model.cardId);
+                if (existingUserAudio != null)
+                {
+                    // La tarjeta ya está marcada como favorita, puedes manejar esto como desmarcarla
+                    // Aquí, puedes cambiar el estado o eliminar el registro, según tu modelo
+                    _userAudioService.RemoveUserAudio(existingUserAudio.Id_UserAudio);
+                    return Ok("Tarjeta desmarcada como favorita.");
+                }
+                else
+                {
+                    // La tarjeta aún no está marcada como favorita, puedes agregar un nuevo registro en UserAudio
+                    var userAudio = new UserAudio
+                    {
+                        Id_user = idUser,
+                        Id_AudioFiles = model.cardId,
+                        State = "active" // Puedes usar otro estado si lo prefieres
+                    };
+
+                    var userAudioId = _userAudioService.InsertUserAudio(userAudio);
+
+                    return Ok($"Tarjeta marcada como favorita con ID {userAudioId}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error en MarkFavorite: " + ex.ToString());
+                return StatusCode(500, "Ocurrió un error interno en el servidor.");
+            }
+        }
+
+        [HttpGet("favoritos")]
+        public async Task<IActionResult> GetFavoritos()
+        {
             var userId = ExtractUserIdFromAuthorizationHeader(HttpContext);
+            //var userId = ExtractUserIdFromToken(HttpContext);
 
 
             if (userId == null)
@@ -55,29 +102,25 @@ namespace SoundofSilence.Controllers
 
             // Realiza una conversión segura a int
             int idUser = userId.Value;
-            // //Verifica si el usuario ya ha marcado esta tarjeta como favorita
-            var existingUserAudio = _userAudioService.GetUserAudioByUserIdAndCardId(idUser, model.cardId);
-            if (existingUserAudio != null)
-            {
-                // La tarjeta ya está marcada como favorita, puedes manejar esto como desmarcarla
-                // Aquí, puedes cambiar el estado o eliminar el registro, según tu modelo
-                _userAudioService.RemoveUserAudio(existingUserAudio.Id_UserAudio);
-                return Ok("Tarjeta desmarcada como favorita.");
-            }
-            else
-            {
-                // La tarjeta aún no está marcada como favorita, puedes agregar un nuevo registro en UserAudio
-                var userAudio = new UserAudio
-                {
-                    Id_user = idUser,
-                    Id_AudioFiles = model.cardId,
-                    State = "active" // Puedes usar otro estado si lo prefieres
-                };
 
-                var userAudioId = _userAudioService.InsertUserAudio(userAudio);
+            return Ok(_userAudioService.GetFavoriteAudioFilesByUserId(idUser));
+        }
 
-                return Ok($"Tarjeta marcada como favorita con ID {userAudioId}.");
+
+
+        private int? ExtractUserIdFromToken(HttpContext httpContext)
+        {
+            var token = httpContext.Request.Cookies["jwtToken"];
+
+            // Agrega un registro para imprimir el contenido del token
+            Console.WriteLine("Token recibido: " + token);
+
+            if (token != null)
+            {
+                var userId = DecodeUserIdFromToken(token);
+                return userId;
             }
+            return null;
         }
 
         private int? ExtractUserIdFromAuthorizationHeader(HttpContext httpContext)
@@ -93,21 +136,6 @@ namespace SoundofSilence.Controllers
 
             return null;
         }
-
-        //private int? ExtractUserIdFromToken(HttpContext httpContext)
-        //{
-        //    var token = httpContext.Request.Cookies["jwtToken"];
-
-        //    // Agrega un registro para imprimir el contenido del token
-        //    Console.WriteLine("Token recibido: " + token);
-
-        //    if (token != null)
-        //    {
-        //        var userId = DecodeUserIdFromToken(token);
-        //        return userId;
-        //    }
-        //    return null;
-        //}
 
         private int? DecodeUserIdFromToken(string token)
         {
@@ -135,18 +163,31 @@ namespace SoundofSilence.Controllers
                     return userId;
                 }
             }
+            catch (SecurityTokenExpiredException ex)
+            {
+                // El token ha expirado, puedes manejar esto de acuerdo a tus necesidades
+                Console.WriteLine("El token ha expirado: " + ex.Message);
+            }
+            catch (SecurityTokenInvalidSignatureException ex)
+            {
+                // La firma del token no es válida, puedes manejar esto de acuerdo a tus necesidades
+                Console.WriteLine("La firma del token no es válida: " + ex.Message);
+            }
             catch (Exception ex)
             {
-                // Maneja errores de decodificación o validación aquí
+                // Manejo genérico para otras excepciones
+                Console.WriteLine("Error al descodificar o validar el token: " + ex.Message);
             }
 
             return null;
         }
 
+
         public class MarkFavoriteModel
         {
             public int cardId { get; set; }
         }
+
 
 
 

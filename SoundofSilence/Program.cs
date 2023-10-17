@@ -7,6 +7,7 @@ using SoundofSilence.IServices;
 using SoundofSilence.Services;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -55,6 +56,9 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAudioFilesService, AudioFileService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserAudioService, UserAudioService>();
+//builder.Services.AddScoped<ITokenHandlerService, TokenHandler>();
+
+
 
 builder.Services.AddDbContext<ServiceContext>(
     options => 
