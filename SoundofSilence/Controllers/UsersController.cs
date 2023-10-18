@@ -80,7 +80,7 @@ namespace SoundofSilence.Controllers
                 {
                     var token = GenerateJwtToken(user);
 
-                    //// Establece el token en una cookie y luego responde con el token
+                    ////// Establece el token en una cookie y luego responde con el token
                     Response.Cookies.Append("jwtToken", token, new CookieOptions
                     {
                         HttpOnly = false, // Para mayor seguridad, marca la cookie como httpOnly
