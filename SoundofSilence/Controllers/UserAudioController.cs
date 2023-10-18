@@ -46,6 +46,8 @@ namespace SoundofSilence.Controllers
                 Console.WriteLine("IdCArd recibido: " + model.cardId);
 
                 var userId = ExtractUserIdFromAuthorizationHeader(HttpContext);
+                //var userId = ExtractUserIdFromToken(HttpContext);
+
 
 
                 if (userId == null)
