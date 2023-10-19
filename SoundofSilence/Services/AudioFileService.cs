@@ -70,11 +70,16 @@ namespace SoundofSilence.Services
             return _serviceContext.AudioFiles.ToList();
         }
 
+        public bool Exists(int Id_AudioFiles)
+        {
+            return _serviceContext.AudioFiles.Any(a => a.Id_AudioFiles == Id_AudioFiles);
 
+    }
         public List<AudioFiles> GetAudioFilesByCategory(int Id_category)
         {
             // Filtra los archivos de audio por Id_category
             return _serviceContext.AudioFiles.Where(audioFile => audioFile.Id_category == Id_category).ToList();
+
+        }
         }
     }
-}
