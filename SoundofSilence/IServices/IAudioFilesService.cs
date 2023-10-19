@@ -9,5 +9,7 @@ namespace SoundofSilence.IServices
         void DeleteAudioFile(int Id_AudioFiles);
         List<AudioFiles> GetAudioFiles();
         List<AudioFiles> GetAudioFilesByCategory(int Id_category);
+        bool Exists(int Id_AudioFiles);
+
     }
 }
