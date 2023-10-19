@@ -42,6 +42,8 @@ namespace SoundofSilence.Controllers
             {
                 return StatusCode(500, $"Error al obtener el ID del rol: {ex.Message}");
             }
+
+            //return Ok(_audioFilesService.InsertAudioFiles(audioFiles));
         }
 
         [HttpPatch("{Id_AudioFiles}", Name = "UpdateAudioFiles")]
@@ -58,6 +60,23 @@ namespace SoundofSilence.Controllers
 
             // Devolver una respuesta con un mensaje de éxito o redirigir a una página de éxito
             return Ok(new { message = "AudioFile eliminado exitosamente" });
+        }
+
+        [HttpGet(Name = "GetAudioFiles")]
+        public List<AudioFiles> Get()
+        {
+
+            return _audioFilesService.GetAudioFiles();
+        }
+
+
+
+
+
+        [HttpGet("{Id_category}", Name = "GetAudioFilesByCategory")]
+        public List<AudioFiles> GetByCategory([FromRoute] int Id_category)
+        {
+            return _audioFilesService.GetAudioFilesByCategory(Id_category);
         }
 
     }

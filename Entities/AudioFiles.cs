@@ -14,19 +14,19 @@ namespace Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id_AudioFiles { get; set; }
-        public string Title { get; set; }
-        public string Video { get; set; }
-        public string Description { get; set; }
-        public string Audio { get; set; }   
+        public string title { get; set; }
+        public string videoSrc { get; set; }
+        public string description { get; set; }
+        public string audioSrc { get; set; }   
         // Relación con Usuer (muchos a uno)
         [ForeignKey("Category")]
         public int Id_category { get; set; }
 
-        [JsonIgnore]
-        public virtual Category Category { get; set; }
+        //[JsonIgnore]
+        //public virtual Category Category { get; set; }
 
-        [JsonIgnore]
-        public ICollection<UserAudio> UserAudio { get; set; }
+        //[JsonIgnore]
+        //public ICollection<UserAudio> UserAudio { get; set; }
 
     }
 }
