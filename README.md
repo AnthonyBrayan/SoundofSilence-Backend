@@ -24,7 +24,7 @@ In the context of your Sound of Silence platform, "relationship table" could ref
 
 <div> <img src="https://res.cloudinary.com/dqc0wvttr/image/upload/v1697715693/DiagramaAPI_jdynbr.png" width="40" height="40"/>
 
-### 💻 Versiones de algunas tecnologías y herramientas usadas en este proyecto 
+### 💻 Versions of some technologies and tools used in this project
 ***
 hese are its elements:
 
