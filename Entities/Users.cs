@@ -19,7 +19,7 @@ namespace Entities
         public string Email { get; set; }
         public string Password { get; set; }
 
-        // Relación con Usuer (muchos a uno)
+       
         [ForeignKey("Rol")]
         public int Id_rol { get; set; }
 
@@ -27,7 +27,6 @@ namespace Entities
         public virtual Rol Rol { get; set; }
 
         [JsonIgnore]
-        //Relación con Custumer(uno a muchos)
         public ICollection<UserAudio> UserAudio { get; set; }
 
     }

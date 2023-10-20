@@ -12,7 +12,6 @@ namespace Entities
         public int Id_rol { get; set; }
         public string Name_rol { get; set; }
 
-        // Relación con Custumer (uno a muchos)
         [JsonIgnore]
         public ICollection<Users> Users { get; set; }
 

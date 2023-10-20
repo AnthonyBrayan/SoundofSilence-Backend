@@ -15,13 +15,12 @@ namespace SoundofSilence.Services
         {
             _serviceContext.UserAudio.Add(userAudio);
             _serviceContext.SaveChanges();
-            return userAudio.Id_UserAudio; // Devuelve el ID del nuevo registro
+            return userAudio.Id_UserAudio;
         }
 
         public UserAudio GetUserAudioByUserIdAndCardId(int userId, int cardId)
         {
-            // Realiza una consulta en tu base de datos para encontrar un registro en la tabla UserAudio
-            // que coincida con el userId y el cardId
+           
             var userAudio = _serviceContext.UserAudio
                 .FirstOrDefault(ua => ua.Id_user == userId && ua.Id_AudioFiles == cardId);
 
@@ -30,20 +29,20 @@ namespace SoundofSilence.Services
 
         public void RemoveUserAudio(int userAudioId)
         {
-            // Busca el registro de UserAudio por su Id_UserAudio
+            
             var userAudio = _serviceContext.UserAudio.FirstOrDefault(ua => ua.Id_UserAudio == userAudioId);
 
             if (userAudio != null)
             {
-                // Si se encuentra el registro, lo elimina de la base de datos
+                
                 _serviceContext.UserAudio.Remove(userAudio);
                 _serviceContext.SaveChanges();
             }
-            // Si el registro no existe, puedes manejarlo de alguna manera, por ejemplo, lanzar una excepción o realizar otro tipo de acción.
+            
             else
             {
-                // Manejo de registro no encontrado, por ejemplo:
-                throw new Exception("El registro de UserAudio no se encontró para el Id proporcionado.");
+                
+                throw new Exception("UserAudio record was not found for the Id provided..");
             }
         }
 
@@ -54,13 +53,13 @@ namespace SoundofSilence.Services
 
         public List<AudioFiles> GetFavoriteAudioFilesByUserId(int userId)
         {
-            // Realiza una consulta que une las tablas UserAudio y AudioFiles
+         
             var query = from userAudio in _serviceContext.UserAudio
                         where userAudio.Id_user == userId
                         join audioFile in _serviceContext.AudioFiles on userAudio.Id_AudioFiles equals audioFile.Id_AudioFiles
                         select audioFile;
 
-            // Ejecuta la consulta y devuelve los resultados como una lista
+            
             return query.ToList();
         }
 

@@ -10,14 +10,14 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var securityKey = new byte[32]; // 256 bits
+var securityKey = new byte[32]; 
 using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
 {
     rng.GetBytes(securityKey);
@@ -56,7 +56,7 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAudioFilesService, AudioFileService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IUserAudioService, UserAudioService>();
-//builder.Services.AddScoped<ITokenHandlerService, TokenHandler>();
+
 
 
 
@@ -67,7 +67,7 @@ builder.Services.AddDbContext<ServiceContext>(
 
 var app = builder.Build();
 app.UseCors("AllowAll");
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

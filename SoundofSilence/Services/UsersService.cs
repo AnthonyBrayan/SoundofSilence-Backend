@@ -29,7 +29,7 @@ namespace SoundofSilence.Services
             }
             else
             {
-                throw new Exception($"No se encontró un rol con el nombre {roleName}");
+                throw new Exception($"No role found with the name {roleName}");
             }
         }
 
@@ -40,13 +40,13 @@ namespace SoundofSilence.Services
 
             if (user == null)
             {
-                return false; // Usuario no encontrado, la eliminación no se realizó.
+                return false; 
             }
 
             _serviceContext.Users.Remove(user);
             _serviceContext.SaveChanges();
 
-            return true; // La eliminación se realizó con éxito.
+            return true; 
         }
 
     }

@@ -26,13 +26,13 @@ namespace SoundofSilence.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserAudioService _userAudioService;
-        //private readonly ITokenHandler _tokenHandler;
+       
 
         public UserAudioController(IConfiguration configuration, IUserAudioService userAudioService)
         {
             _configuration = configuration;
             _userAudioService = userAudioService;
-            //_tokenHandler = tokenHandler;
+            
 
         }
 
@@ -43,49 +43,47 @@ namespace SoundofSilence.Controllers
 
             try
             {
-                Console.WriteLine("IdCArd recibido: " + model.cardId);
+                Console.WriteLine("IdCArd received: " + model.cardId);
 
                 var userId = ExtractUserIdFromAuthorizationHeader(HttpContext);
-                //var userId = ExtractUserIdFromToken(HttpContext);
+                
 
 
 
                 if (userId == null)
                 {
-                    // El usuario no está autenticado
-                    return Unauthorized("El usuario no está autenticado.");
+                    
+                    return Unauthorized("User is not authenticated.");
                 }
 
-                // Realiza una conversión segura a int
+                
                 int idUser = userId.Value;
-                // //Verifica si el usuario ya ha marcado esta tarjeta como favorita
+                
                 var existingUserAudio = _userAudioService.GetUserAudioByUserIdAndCardId(idUser, model.cardId);
                 if (existingUserAudio != null)
                 {
-                    // La tarjeta ya está marcada como favorita, puedes manejar esto como desmarcarla
-                    // Aquí, puedes cambiar el estado o eliminar el registro, según tu modelo
+                    
                     _userAudioService.RemoveUserAudio(existingUserAudio.Id_UserAudio);
-                    return Ok("Tarjeta desmarcada como favorita.");
+                    return Ok("Card unmarked as favourite.");
                 }
                 else
                 {
-                    // La tarjeta aún no está marcada como favorita, puedes agregar un nuevo registro en UserAudio
                     var userAudio = new UserAudio
                     {
                         Id_user = idUser,
                         Id_AudioFiles = model.cardId,
-                        State = "active" // Puedes usar otro estado si lo prefieres
+                        State = "active" 
                     };
 
                     var userAudioId = _userAudioService.InsertUserAudio(userAudio);
 
-                    return Ok($"Tarjeta marcada como favorita con ID {userAudioId}.");
+                    return Ok($"Favourite card with ID {userAudioId}.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error en MarkFavorite: " + ex.ToString());
-                return StatusCode(500, "Ocurrió un error interno en el servidor.");
+                Console.WriteLine("Error in MarkFavorite: " + ex.ToString());
+                return StatusCode(500, "An internal server error occurred.");
             }
         }
 
@@ -93,16 +91,16 @@ namespace SoundofSilence.Controllers
         public async Task<IActionResult> GetFavoritos()
         {
             var userId = ExtractUserIdFromAuthorizationHeader(HttpContext);
-            //var userId = ExtractUserIdFromToken(HttpContext);
+           
 
 
             if (userId == null)
             {
-                // El usuario no está autenticado
-                return Unauthorized("El usuario no está autenticado.");
+                
+                return Unauthorized("User is not authenticated.");
             }
 
-            // Realiza una conversión segura a int
+            
             int idUser = userId.Value;
 
             return Ok(_userAudioService.GetFavoriteAudioFilesByUserId(idUser));
@@ -114,8 +112,8 @@ namespace SoundofSilence.Controllers
         {
             var token = httpContext.Request.Cookies["jwtToken"];
 
-            // Agrega un registro para imprimir el contenido del token
-            Console.WriteLine("Token recibido: " + token);
+           
+            Console.WriteLine("Token received: " + token);
 
             if (token != null)
             {
@@ -141,24 +139,22 @@ namespace SoundofSilence.Controllers
 
         private int? DecodeUserIdFromToken(string token)
         {
-            // Configura la validación de tokens
+           
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = false, // Puedes ajustar esto según tu configuración
-                ValidateAudience = false, // Puedes ajustar esto según tu configuración
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"])), // Reemplaza con tu clave secreta
+                ValidateIssuer = false, 
+                ValidateAudience = false, 
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JwtSettings:Secret"])),
             };
 
             try
             {
-                // Crea un token handler
                 var tokenHandler = new JwtSecurityTokenHandler();
 
-                // Valida y deserializa el token
+                
                 var claimsPrincipal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
 
-                // Extrae el ID de usuario del token
-                var userIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name); // "sub" es la claim común para el ID de usuario
+                var userIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
 
                 if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
                 {
@@ -167,18 +163,17 @@ namespace SoundofSilence.Controllers
             }
             catch (SecurityTokenExpiredException ex)
             {
-                // El token ha expirado, puedes manejar esto de acuerdo a tus necesidades
-                Console.WriteLine("El token ha expirado: " + ex.Message);
+                
+                Console.WriteLine("The token has expired: " + ex.Message);
             }
             catch (SecurityTokenInvalidSignatureException ex)
             {
-                // La firma del token no es válida, puedes manejar esto de acuerdo a tus necesidades
-                Console.WriteLine("La firma del token no es válida: " + ex.Message);
+               
+                Console.WriteLine("Token signature is invalid: " + ex.Message);
             }
             catch (Exception ex)
             {
-                // Manejo genérico para otras excepciones
-                Console.WriteLine("Error al descodificar o validar el token: " + ex.Message);
+                Console.WriteLine("Error decoding or validating token: " + ex.Message);
             }
 
             return null;

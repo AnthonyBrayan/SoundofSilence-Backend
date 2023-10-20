@@ -18,15 +18,9 @@ namespace Entities
         public string videoSrc { get; set; }
         public string description { get; set; }
         public string audioSrc { get; set; }   
-        // Relación con Usuer (muchos a uno)
+       
         [ForeignKey("Category")]
         public int Id_category { get; set; }
-
-        //[JsonIgnore]
-        //public virtual Category Category { get; set; }
-
-        //[JsonIgnore]
-        //public ICollection<UserAudio> UserAudio { get; set; }
 
     }
 }

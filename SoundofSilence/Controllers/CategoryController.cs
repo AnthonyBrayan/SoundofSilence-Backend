@@ -24,21 +24,21 @@ namespace SoundofSilence.Controllers
         {
             try
             {
-                // Validaciones de categoría aquí (puedes verificar si ya existe, por ejemplo)
+                
                 if (category == null)
                 {
-                    return BadRequest("La categoría proporcionada es nula.");
+                    return BadRequest("The category provided is null.");
                 }
 
                 _serviceContext.Category.Add(category);
                 _serviceContext.SaveChanges();
 
-                // Devolver una respuesta con el objeto recién creado
-                return Ok(category); // Devolvemos un código 200 OK junto con la categoría insertada
+                
+                return Ok(category); 
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al insertar la categoría: {ex.Message}");
+                return StatusCode(500, $"Error inserting category: {ex.Message}");
             }
         }
 
@@ -51,19 +51,19 @@ namespace SoundofSilence.Controllers
 
                 if (existingCategory == null)
                 {
-                    return NotFound($"La categoría con ID {id} no fue encontrada.");
+                    return NotFound($"The category with ID {id} not found.");
                 }
 
-                // Actualizar las propiedades de la categoría existente
+               
                 existingCategory.name_category = category.name_category;
 
                 _serviceContext.SaveChanges();
 
-                return Ok(existingCategory); // Devolvemos la categoría actualizada con un código 200 OK
+                return Ok(existingCategory); 
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al actualizar la categoría: {ex.Message}");
+                return StatusCode(500, $"Error updating category: {ex.Message}");
             }
         }
     }

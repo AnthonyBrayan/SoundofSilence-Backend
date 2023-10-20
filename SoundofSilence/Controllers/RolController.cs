@@ -39,7 +39,7 @@ namespace SoundofSilence.Controllers
 
                 if (existingWithNameRol != null)
                 {
-                    return StatusCode(404, "Ya existe un rol con el mismo nombre.");
+                    return StatusCode(404, "A role with the same name already exists.");
                 }
                 else
                 {
@@ -48,7 +48,7 @@ namespace SoundofSilence.Controllers
             }
             else
             {
-                return StatusCode(404, "El usuario no está autorizado o no existe");
+                return StatusCode(404, "The user is not authorised or does not exist");
             }
         }
 

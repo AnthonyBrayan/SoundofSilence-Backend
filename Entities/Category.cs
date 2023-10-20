@@ -15,10 +15,5 @@ namespace Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id_category { get; set; }
         public string name_category { get; set; }
-
-       
-
-        //[JsonIgnore]
-        //public ICollection<AudioFiles> AudioFiles { get; set; }
     }
 }

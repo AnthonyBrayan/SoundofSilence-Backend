@@ -12,19 +12,19 @@ namespace SoundofSilence.Services
 
         public int InsertAudioFiles(AudioFiles audioFiles)
         {
-            // Verifica si el Id_category proporcionado es válido
+          
             var category = _serviceContext.Category.FirstOrDefault(c => c.Id_category == audioFiles.Id_category);
 
             if (category == null)
             {
-                // Si el Id_category no es válido, podrías lanzar una excepción o manejar el caso según tus requerimientos.
-                throw new InvalidOperationException("La categoría no es válida.");
+              
+                throw new InvalidOperationException("The category is not valid.");
             }
 
-            // Establece la categoría del audioFiles
-            audioFiles.Id_category = category.Id_category; // Establecer el ID de la categoría
+            
+            audioFiles.Id_category = category.Id_category; 
 
-            // Agrega el audioFiles al contexto y guarda los cambios
+            
             _serviceContext.AudioFiles.Add(audioFiles);
             _serviceContext.SaveChanges();
 
@@ -37,11 +37,11 @@ namespace SoundofSilence.Services
 
             if (existingAudioFiles == null)
             {
-                // Si el producto no existe, podrías lanzar una excepción o manejar el caso según tus requerimientos.
-                throw new InvalidOperationException("El AudioDile no existe.");
+               
+                throw new InvalidOperationException("AudioDile does not exist.");
             }
 
-            // Actualiza las propiedades del producto con la información del producto modificado
+           
             existingAudioFiles.title = updatedAudioFiles.title;
             existingAudioFiles.videoSrc = updatedAudioFiles.videoSrc;
             existingAudioFiles.description = updatedAudioFiles.description;
@@ -61,7 +61,7 @@ namespace SoundofSilence.Services
             }
             else
             {
-                throw new InvalidOperationException("El Audio File no existe.");
+                throw new InvalidOperationException("AudioDile does not exist.");
             }
         }
 
@@ -77,7 +77,7 @@ namespace SoundofSilence.Services
     }
         public List<AudioFiles> GetAudioFilesByCategory(int Id_category)
         {
-            // Filtra los archivos de audio por Id_category
+            
             return _serviceContext.AudioFiles.Where(audioFile => audioFile.Id_category == Id_category).ToList();
 
         }
